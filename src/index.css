@@ -7,6 +7,11 @@ ol, ul {
   padding-left: 30px;
 }
 
+li {
+  display: flex;
+  align-items: flex-start;
+}
+
 .board-row:after {
   clear: both;
   content: "";

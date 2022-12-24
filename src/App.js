@@ -2,11 +2,50 @@ import { useState } from "react";
 import "./App.css";
 
 function App() {
+  const [state, setState] = useState({
+    history: [
+      {
+        squares: Array(9).fill(null),
+      },
+    ],
+    xIsNext: true,
+    stepNumber: 0
+  });
+  const history = state.history;
+  const current = history[state.stepNumber];
+  const winner = calculateWinner(current.squares);
+  const status = winner
+    ? "Winner: " + winner
+    : "Next player: " + (state.xIsNext ? "X" : "O");
+  const moves = history.map((step, move) => {
+    const desc = move ? "Go to move #" + move : "Go to game start";
+    return (
+      <li key={move}>
+        <button onClick={() => jumpTo(move, setState, state)}>{desc}</button>
+      </li>
+    );
+  });
   return (
     <div className="App">
-      <Board></Board>
+      <Board
+        currentState={current.squares}
+        history={history}
+        status={status}
+        onClick={(i) => handleClick(i, state, setState)}
+      ></Board>
+      <ol>{moves}</ol>
     </div>
   );
+}
+
+function jumpTo(step, setState, state) {
+  console.log('state before: ', state)
+  setState({
+    stepNumber: step,
+    xIsNext: (step % 2) === 0,
+    history: state.history.slice()
+  });
+  console.log('state after: ', state)
 }
 
 function Square(props) {
@@ -17,52 +56,52 @@ function Square(props) {
   );
 }
 
-function renderSquare(i, state, setState) {
+function renderSquare(i, squares, onClick) {
   return (
     <Square
-      value={state.squares[i]}
-      onClick={() => handleClick(i, state, setState)}
+      value={squares[i]}
+      onClick={() => onClick(i)}
     />
   );
 }
 
 function handleClick(i, state, setState) {
-  const squares = state.squares.slice();
+  const history = state.history.slice(0, state.stepNumber + 1);
+  const current = history[history.length - 1];
+  const squares = current.squares.slice();
   if (calculateWinner(squares) || squares[i]) {
     return;
   }
   squares[i] = state.xIsNext ? "X" : "O";
-  setState({ squares: squares, xIsNext: !state.xIsNext });
+  setState({
+    history: history.concat([
+      {
+        squares: squares,
+      },
+    ]),
+    stepNumber: history.length,
+    xIsNext: !state.xIsNext,
+  });
 }
 
-function Board() {
-  const [state, setState] = useState({
-    squares: Array(9).fill(null),
-    xIsNext: true,
-  });
-  const winner = calculateWinner(state.squares);
-  const status = winner
-    ? "Winner: " + winner
-    : "Next player: " + (state.xIsNext
-    ? "X"
-    : "O");
+function Board(props) {
   return (
     <div>
-      <div className="status">{status}</div>
+      <div className="status">{props.status}</div>
       <div className="board-row">
-        {renderSquare(0, state, setState)}
-        {renderSquare(1, state, setState)}
-        {renderSquare(2, state, setState)}
+        {renderSquare(0, props.currentState, props.onClick, props.history)}
+        {renderSquare(1, props.currentState, props.onClick, props.history)}
+        {renderSquare(2, props.currentState, props.onClick, props.history)}
       </div>
       <div className="board-row">
-        {renderSquare(3, state, setState)}
-        {renderSquare(4, state, setState)}
-        {renderSquare(5, state, setState)}
+        {renderSquare(3, props.currentState, props.onClick, props.history)}
+        {renderSquare(4, props.currentState, props.onClick, props.history)}
+        {renderSquare(5, props.currentState, props.onClick, props.history)}
       </div>
       <div className="board-row">
-        {renderSquare(6, state, setState)}
-        {renderSquare(7, state, setState)}
-        {renderSquare(8, state, setState)}
+        {renderSquare(6, props.currentState, props.onClick, props.history)}
+        {renderSquare(7, props.currentState, props.onClick, props.history)}
+        {renderSquare(8, props.currentState, props.onClick, props.history)}
       </div>
     </div>
   );
