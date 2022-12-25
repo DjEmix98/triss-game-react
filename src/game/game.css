@@ -1,0 +1,8 @@
+.game__list {
+  padding-left: 30px;
+}
+
+.game__list--item {
+  display: flex;
+  align-items: flex-start;
+}

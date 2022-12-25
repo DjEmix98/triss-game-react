@@ -1,0 +1,9 @@
+.board__row::after {
+  clear: both;
+  content: '';
+  display: table;
+}
+.board__status {
+  margin-bottom: 10px;
+  text-align: start;
+}
