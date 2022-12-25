@@ -51,17 +51,16 @@ function handleClick(i, state, setState) {
   const history = state.history.slice(0, state.stepNumber + 1);
   const current = history[history.length - 1];
   const squares = current.squares.slice();
-  if (calculateWinner(squares) || squares[i]) {
-    return;
+  if (!calculateWinner(squares) && !squares[i]) {
+    squares[i] = state.xIsNext ? "X" : "O";
+    setState({
+      history: history.concat([
+        {
+          squares: squares,
+        },
+      ]),
+      stepNumber: history.length,
+      xIsNext: !state.xIsNext,
+    });
   }
-  squares[i] = state.xIsNext ? "X" : "O";
-  setState({
-    history: history.concat([
-      {
-        squares: squares,
-      },
-    ]),
-    stepNumber: history.length,
-    xIsNext: !state.xIsNext,
-  });
 }
