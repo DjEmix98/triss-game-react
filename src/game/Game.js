@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { calculateWinner } from "../utils/winner-utils";
 import { Board } from "../board/Board";
-import "./game.css";
+import "../styles/game.css";
 export function Game() {
   const [state, setState] = useState({
     history: [

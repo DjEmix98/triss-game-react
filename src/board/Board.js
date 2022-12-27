@@ -1,5 +1,5 @@
 import { renderSquare } from "../square/Square";
-import "./board.css";
+import "../styles/board.css";
 export function Board(props) {
   return (
     <div>
